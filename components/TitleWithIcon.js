@@ -5,18 +5,19 @@ import Colors from '../constants/Colors'
 
 export default class extends React.Component {
     render() {
-        const { color, text, icon, size, subhead } = this.props;
-        console.log(text);
+        const { color, text, icon, iconColor, size, subhead, iconBackColor } = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.title}>
+                    <View style={[{ backgroundColor: iconBackColor }, styles.iconBack]}>
+                        <Icon.Iconfont
+                            style={styles.icon}
+                            name={icon}
+                            color={iconColor}
+                            size={size}
+                        />
+                    </View>
                     <Text style={{ fontSize: size, color }}>{text}</Text>
-                    <Icon.Iconfont
-                        style={styles.icon}
-                        name={icon}
-                        color={color}
-                        size={size}
-                    />
                 </View>
                 <Text style={styles.subhead}>{subhead}</Text>
             </View>
@@ -26,13 +27,22 @@ export default class extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        
+
     },
     title: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     subhead: {
         fontSize: 10,
         color: Colors.subhead,
-    }
+    },
+    iconBack: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 50,
+        padding: 1,
+        marginRight: 3,
+    }, 
+
 });

@@ -8,6 +8,8 @@ import {
   ScrollView,
   RefreshControl,
   StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native'
 import { Video, Icon } from "expo";
 import Swiper from 'react-native-swiper'
@@ -15,16 +17,16 @@ import Colors from '../constants/Colors'
 import BANNERS from "../data/BannerData";
 import CustomFunctionButtonGroup from "../components/CustomFunctionButtonGroup";
 import HomeTitle from "../components/LogoTitle/HomeTitle";
-import { FlatList } from 'react-native-gesture-handler';
 import ScrollText from '../components/VerticalAutoScroll';
+import MainRecomend from '../view/MainRecomendView';
+
 import { BulletinData } from "../data/BulletinData";
-import MultiColumn from '../components/MultiColumnLayout';
-import MainRecomend from '../view/MainRecomend';
+import { TaoData } from "../data/TaoData";
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
-export default class extends Component {
+export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,29 +58,48 @@ export default class extends Component {
             onRefresh={this._onRefresh} />}
         style={{ backgroundColor: 'white' }}
       >
+        {/* 轮播图 */}
         <Swiper autoplay paginationStyle={{ bottom: 5 }} activeDotColor={Colors.tintColor} style={styles.swiper}>
-          {BANNERS[0].map((value, index) => <View style={styles.slide} key={index}><Image resizeMode='cover' style={styles.slideImage} source={value} /></View>)}
+          {BANNERS[0].map((value, index) => (
+            <TouchableHighlight
+              style={styles.slide} key={index}
+              onPress={() => this.props.navigation.navigate('Detail', { text: 'Banner'+index })}
+            >
+              <Image resizeMode='cover' style={styles.slideImage} source={value} />
+            </TouchableHighlight>))}
         </Swiper>
+
+        {/* 导航栏  */}
         <CustomFunctionButtonGroup
           style={styles.functionButtonGroup}
         />
-        <View style={styles.bulletinBoard}>
-          <Image
-            style={styles.toutiao}
-            source={require('../images/bulletin/taobaotoutiao.png')}
-          />
-          <ScrollText interval={2} scrollLength={30} >
-            {BulletinData[0].map((current, index) => {
-              return (
-                <View style={styles.bulletinView} key={index}>
-                  <Text style={styles.bulletinTextLabel}>{current.label}</Text>
-                  <Text style={styles.bulletinText}>{current.text}</Text>
-                </View>
-              );
-            })}
-          </ScrollText>
-        </View>
-        <MainRecomend  />
+
+        {/* 淘宝头条 */}
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('Detail', { text: '淘宝头条' })}
+        >
+          <View style={styles.bulletinBoard}>
+            <Image
+              style={styles.toutiao}
+              source={require('../images/bulletin/taobaotoutiao.png')}
+            />
+            <ScrollText interval={2} scrollLength={30} >
+              {BulletinData[0].map((current, index) => {
+                return (
+                  <View style={styles.bulletinView} key={index}>
+                    <Text style={styles.bulletinTextLabel}>{current.label}</Text>
+                    <Text style={styles.bulletinText}>{current.text}</Text>
+                  </View>
+                );
+              })}
+            </ScrollText>
+          </View>
+        </TouchableOpacity>
+
+        {/* 淘抢购 推荐栏 */}
+        <MainRecomend TaoData={TaoData} navigation={this.props.navigation} />
+
+        {/* 淘宝直播 */}
         <View style={{ height: 345, backgroundColor: Colors.tabIconDefault }}>
           <View style={{ position: 'absolute', top: 10, width: 100, height: 30, borderTopRightRadius: 50, borderBottomRightRadius: 50, backgroundColor: Colors.deepPink, justifyContent: 'center', alignItems: 'center', zIndex: 1 }}>
             <Text style={{ color: 'white' }}>淘宝直播</Text>
@@ -189,5 +210,9 @@ const styles = StyleSheet.create({
     marginRight: 3
   },
   bulletinText: {
+  },
+  liveView: {
+    height: 345,
+    backgroundColor: Colors.tabIconDefault
   }
 });

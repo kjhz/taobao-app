@@ -7,7 +7,7 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import WeScreen from '../screens/WeScreen';
 import MessageScreen from '../screens/MessageScreen';
-import CartScreen from "../screens/CartScreen";
+import ShopScreen from "../screens/ShopScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import DetailScreen from "../screens/DetailScreen";
 import Colors from "../constants/Colors"
@@ -70,11 +70,11 @@ MessageStack.navigationOptions = {
   ),
 };
 
-const CartStack = createStackNavigator({
-  Cart: CartScreen,
+const ShopStack = createStackNavigator({
+  Shop: ShopScreen,
 });
 
-CartStack.navigationOptions = {
+ShopStack.navigationOptions = {
   tabBarLabel: '购物车',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -103,7 +103,7 @@ export default createBottomTabNavigator(
     HomeStack,
     WeStack,
     MessageStack,
-    CartStack,
+    ShopStack,
     ProfileStack,
   },
 );

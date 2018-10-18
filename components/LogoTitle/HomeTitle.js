@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Text, View, StyleSheet, TouchableHighlight } from 'react-native';
 import { Icon } from 'expo';
+import { createStackNavigator } from "react-navigation";
+
+import HomeScreen from "../../screens/HomeScreen";
+import ScanScreen from "../../screens/subScreens/ScanScreen";
 
 export default class HomeTitle extends React.Component {
     constructor(props) {
         super(props);
         this.state = { text: '寻找宝贝、店铺' };
     }
+    
+
     render() {
         return (
             <View style={styles.container}>
+                <TouchableHighlight
+                    onPress={() => this.props.navigation.push('Detail')}
+                >
                 <View style={styles.sideIcon} >
                     <Icon.Iconfont
                         name="icon-scan"
@@ -19,6 +28,7 @@ export default class HomeTitle extends React.Component {
                     />
                     <Text style={styles.underText}>扫一扫</Text>
                 </View>
+                </TouchableHighlight>
                 <View style={[styles.centerInput, { flex: 1 }]}>
                     <Icon.Iconfont
                         name="icon-search"

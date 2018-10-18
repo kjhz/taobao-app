@@ -7,12 +7,12 @@ import {
     Image, 
 } from "react-native";
 
-export default class MessageScreen extends React.Component{
+export default class shopScreen extends React.Component{
 
     render() {
         return (
             <View style={{flex: 1,justifyContent:'center',alignItems:'center'}}>
-                <Text>消息</Text>
+                <Text>购物车</Text>
             </View>
         );
     }
