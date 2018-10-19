@@ -19,6 +19,7 @@ import CustomFunctionButtonGroup from "../components/CustomFunctionButtonGroup";
 import HomeTitle from "../components/LogoTitle/HomeTitle";
 import ScrollText from '../components/VerticalAutoScroll';
 import MainRecomend from '../view/MainRecomendView';
+import LinearGradient from "react-native-linear-gradient";
 
 import { BulletinData } from "../data/BulletinData";
 import { TaoData } from "../data/TaoData";
@@ -31,23 +32,53 @@ export default class HomeScreen extends Component {
     super(props);
     this.state = {
       refreshing: false,
+      loading: true
     };
+  }
+
+  static navigationOptions = {
+    headerTitle: <HomeTitle />
+  };
+
+  _getRandomArrayElements(arr, count) {
+    let shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+    while (i-- > min) {
+      index = Math.floor((i + 1) * Math.random());
+      temp = shuffled[index];
+      shuffled[index] = shuffled[i];
+      shuffled[i] = temp;
+    }
+    return shuffled.slice(min);
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   _onRefresh = () => {
     this.setState({ refreshing: true });
-    /*  
-    fetchData().then(() => {
-        this.setState({refreshing: false});
-    }); 
-    */
-    setTimeout(() => {
+
+    this.fetchData().then(() => {
+      this.setState({ refreshing: false });
+    });
+
+    /* setTimeout(() => {
       this.setState({ refreshing: false })
-    }, 500);
+    }, 500); */
   }
-  static navigationOptions = {
-    headerTitle: <HomeTitle />
-  };
+
+
+  fetchData() {
+    return fetch('https://raw.githubusercontent.com/kjhz/my-json/master/bulletinData.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        const bulletin = this._getRandomArrayElements(responseJson.bulletin, 4);
+        this.setState({
+          dataSource: { "bulletin": bulletin },
+          loading: false
+        });
+      })
+  }
 
   render() {
     return (
@@ -63,7 +94,7 @@ export default class HomeScreen extends Component {
           {BANNERS[0].map((value, index) => (
             <TouchableHighlight
               style={styles.slide} key={index}
-              onPress={() => this.props.navigation.navigate('Detail', { text: 'Banner'+index })}
+              onPress={() => this.props.navigation.navigate('Detail', { text: 'Banner' + index })}
             >
               <Image resizeMode='cover' style={styles.slideImage} source={value} />
             </TouchableHighlight>))}
@@ -83,17 +114,19 @@ export default class HomeScreen extends Component {
               style={styles.toutiao}
               source={require('../images/bulletin/taobaotoutiao.png')}
             />
-            <ScrollText interval={2} scrollLength={30} >
-              {BulletinData[0].map((current, index) => {
-                return (
-                  <View style={styles.bulletinView} key={index}>
-                    <Text style={styles.bulletinTextLabel}>{current.label}</Text>
-                    <Text style={styles.bulletinText}>{current.text}</Text>
-                  </View>
-                );
-              })}
+            <ScrollText interval={2} scrollLength={30} style={{ overflow: 'hidden' }}>
+              {this.state.loading ? null :
+                this.state.dataSource.bulletin.map((current, index) => {
+                  return (
+                    <View style={styles.bulletinView} key={index}>
+                      <Text>{current.label}</Text>
+                      <Text style={styles.bulletinText}>{current.text}</Text>
+                    </View>
+                  );
+                })}
             </ScrollText>
           </View>
+          <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['rgba(0,0,0,0.2)', 'white']} style={styles.linearGradient} />
         </TouchableOpacity>
 
         {/* 淘抢购 推荐栏 */}
@@ -206,7 +239,6 @@ const styles = StyleSheet.create({
     padding: 1,
     paddingLeft: 2,
     fontSize: 9,
-    color: 'red',
     marginRight: 3
   },
   bulletinText: {
@@ -214,5 +246,11 @@ const styles = StyleSheet.create({
   liveView: {
     height: 345,
     backgroundColor: Colors.tabIconDefault
+  },
+  linearGradient:{
+    width: 60,
+    height: 60,
+    position: 'absolute',
+    right: 0
   }
 });

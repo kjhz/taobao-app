@@ -1,23 +1,24 @@
 import React from 'react';
-import { View, Text, ScrollView } from "react-native";
+import {  ScrollView } from "react-native";
 
 export default class extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.scrollText = React.createRef();
     }
-    componentDidMount() {
+    
+    componentDidUpdate() {
+        clearInterval(this.timer);
         let i = 1;
         let j = React.Children.count(this.props.children);
-        timer=setInterval(() => {
-            this.scrollText.current.scrollTo({ x: 0, y: this.props.scrollLength* i, animated: true })
-            j-1 > i ? i++ : i=0;
+        this.timer = setInterval(() => {
+            this.scrollText.current.scrollTo({ x: 0, y: this.props.scrollLength * i, animated: true })
+            j - 1 > i ? i++ : i = 0;
         }, this.props.interval * 1000);
     }
     componentWillUnmount() {
-        clearInterval(timer);
+        clearInterval(this.timer);
     }
-
     render() {
         return (
             <ScrollView
